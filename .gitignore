@@ -1,0 +1,27 @@
+# Ambiente
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Dados locais (não subir ao git)
+data/chroma_db/
+data/pdfs/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# MLflow
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
