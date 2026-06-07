@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     # Vector store
     chroma_persist_dir: str = "./data/chroma_db"
     database_url: str = ""           # pgvector quando em produção
+    collection_name: str = "financial_docs"
 
     # Cache
     redis_url: str = "redis://localhost:6379"
