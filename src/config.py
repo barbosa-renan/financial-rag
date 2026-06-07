@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     llm_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
+    llm_provider: str = "openai"   # "openai" ou "anthropic"
 
     # Vector store
     chroma_persist_dir: str = "./data/chroma_db"
