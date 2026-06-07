@@ -12,7 +12,6 @@ class VectorStorePort(ABC):
     """
     Port para o banco vetorial.
     O domínio não sabe se é Chroma, pgvector, Pinecone ou qualquer outro.
-    Trocar de banco = trocar o adapter, zero impacto no domain/application.
     """
 
     @abstractmethod

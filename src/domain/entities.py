@@ -5,9 +5,7 @@ from typing import Optional
 @dataclass
 class Document:
     """
-    Entidade central do domínio.
-    Representa um chunk de documento após o processamento.
-    Não depende de nenhuma biblioteca externa — puro Python.
+    Entidade central do domínio, representa um chunk de documento após o processamento.
     """
     content: str
     source: str                          # caminho do arquivo original
@@ -23,7 +21,7 @@ class Document:
 class RAGResponse:
     """
     Resposta produzida pelo pipeline RAG.
-    Inclui rastreabilidade de fontes — essencial para compliance.
+    Inclui rastreabilidade de fontes, essencial para compliance.
     """
     answer: str
     sources: list[str]
