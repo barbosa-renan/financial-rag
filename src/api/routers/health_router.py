@@ -1,7 +1,9 @@
 import logging
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from src.api.schemas import HealthResponse
 from src.api.dependencies import get_vector_store, get_cache
+from src.adapters.cache_adapter import RedisCacheAdapter
+from src.adapters.chroma_vector_store import ChromaVectorStore
 
 logger = logging.getLogger(__name__)
 
@@ -14,14 +16,16 @@ router = APIRouter(tags=["Infra"])
     summary="Healthcheck da aplicação",
     description="Verifica disponibilidade do banco vetorial e do cache.",
 )
-async def health():
+async def health(
+    vector_store: ChromaVectorStore = Depends(get_vector_store),
+    cache: RedisCacheAdapter = Depends(get_cache),
+):
     
-    results = {"vector_store": "ok", "cache": "ok"}
+    results = {}
 
     # Verifica Chroma
     try:
-        store = get_vector_store()
-        count = store.count()
+        count = vector_store.count()
         results["vector_store"] = f"ok ({count} chunks indexados)"
     except Exception as exc:
         logger.error("Healthcheck: Chroma com problema | %s", exc)
@@ -29,13 +33,12 @@ async def health():
 
     # Verifica Redis
     try:
-        cache = get_cache()
         results["cache"] = "ok" if cache.is_available() else "unavailable"
     except Exception as exc:
         logger.warning("Healthcheck: Redis indisponível | %s", exc)
         results["cache"] = "unavailable"
 
-    # Status geral: degraded se Redis fora, error se Chroma fora
+    # Status geral
     overall = "healthy"
     if results["cache"] == "unavailable":
         overall = "degraded"
