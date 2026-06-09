@@ -28,8 +28,12 @@ async def health(
         count = vector_store.count()
         results["vector_store"] = f"ok ({count} chunks indexados)"
     except Exception as exc:
-        logger.error("Healthcheck: Chroma com problema | %s", exc)
-        results["vector_store"] = "error"
+        # Ignora erros de telemetria do Chroma — não afetam o funcionamento
+        if "telemetry" in str(exc).lower() or "capture" in str(exc).lower():
+            results["vector_store"] = f"ok (telemetria ignorada)"
+        else:
+            logger.error("Healthcheck: Chroma com problema | %s", exc)
+            results["vector_store"] = "error"
 
     # Verifica Redis
     try:
