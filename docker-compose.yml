@@ -1,3 +1,4 @@
+
 services:
 
   api:
@@ -5,10 +6,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data          # persiste chroma_db e pdfs localmente
+      - ./data:/app/data
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       REDIS_URL: redis://redis:6379
       CHROMA_PERSIST_DIR: /app/data/chroma_db
       APP_ENV: production
@@ -36,6 +36,15 @@ services:
       - "8001:8000"
     volumes:
       - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.18.0
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/mlruns:/mlflow/mlruns
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri /mlflow/mlruns
     restart: unless-stopped
 
 volumes:
