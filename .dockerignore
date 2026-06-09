@@ -1,0 +1,8 @@
+.venv/
+.env
+data/chroma_db/
+data/mlruns/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/

@@ -2,18 +2,22 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Dependências de sistema (pypdf precisa de algumas)
+# Dependências de sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Cria usuário não-root antes de copiar arquivos
+RUN useradd -m appuser
+
+# Copia e instala dependências primeiro (aproveita cache de layers do Docker)
+COPY --chown=appuser:appuser requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copia o código da aplicação
+COPY --chown=appuser:appuser src/ ./src/
+COPY --chown=appuser:appuser scripts/ ./scripts/
 
-# Usuário não-root (boa prática de segurança)
-RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
 EXPOSE 8000
